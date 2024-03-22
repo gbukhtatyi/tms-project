@@ -1,5 +1,7 @@
 # TMS Project
 
+Площадка для организации тестирования и опросов
+
 # Описание
 
 [Полное описание проекта](docs/index.md)
@@ -10,11 +12,14 @@
 
 https://docs.docker.com/engine/install/
 
+# Структура проекта
+ - docs - Документация по проекту
+
 # Установка
 
 - Склонируйте себе репозитоий
 ```bash
-git@github.com:gbukhtatyi/tms-project.git
+git clone git@github.com:gbukhtatyi/tms-project.git .
 ``` 
 - Для старта проекта выполните в рабочей директории:
 ```bash
