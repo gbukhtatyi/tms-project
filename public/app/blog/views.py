@@ -6,6 +6,18 @@ from django.shortcuts import render, get_object_or_404
 from blog.models import Page, Category, Post
 
 
+def blog_category_index(request):
+    posts = Post.objects.all()
+
+    return render(
+        request,
+        "blog/index.html",
+        {
+            "posts": posts
+        }
+    )
+
+
 def blog_page_view(request, slug):
     '''
 

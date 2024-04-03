@@ -19,16 +19,24 @@ from django.urls import path, include
 # Application
 import app.views
 import blog.views
+import examination.views
+import user.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path("", app.views.welcome_view),
+    path("", app.views.welcome_view, name="home"),
 
     # Auth
     path('auth/', include("django.contrib.auth.urls")),
+    path('auth/singup', user.views.signup, name="register"),
 
     # Blog
-    path("category/<slug>", blog.views.blog_category_view),
-    path("post/<slug>", blog.views.blog_post_view),
+    path("blog", blog.views.blog_category_index),
+    path("blog/category/<slug>", blog.views.blog_category_view),
+    path("blog/post/<slug>", blog.views.blog_post_view),
+
+    # Examination
+    path('examination/', examination.views.TestListView.as_view(), name="examination_list"),
+    path('examination/<pk>', examination.views.TestDetailView.as_view(), name="examination_view"),
 ]
