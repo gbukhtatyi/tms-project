@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 
 class Test(models.Model):
     # Relations
-    user = models.ForeignKey(get_user_model(), on_delete=models.SET_DEFAULT, verbose_name="Owner", default=0)
+    user = models.ForeignKey(get_user_model(), null=True, default=None, on_delete=models.SET_DEFAULT, verbose_name="Owner")
     # Data
     name = models.CharField(max_length=250)
     description = models.CharField(max_length=1024)

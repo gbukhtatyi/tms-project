@@ -1,0 +1,13 @@
+<div class="col-lg-3 mb-4">
+    <div class="card h-100">
+        <div class="card-body">
+            <h4 class="card-title">
+                <a href="{% url 'examination_view' pk=test.id %}">{{ test.name }}</a>
+            </h4>
+            <p class="card-text">{{ test.description }}</p>
+        </div>
+        <div class="card-footer">
+            Начать
+        </div>
+    </div>
+</div>

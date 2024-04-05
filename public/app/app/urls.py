@@ -31,12 +31,21 @@ urlpatterns = [
     path('auth/', include("django.contrib.auth.urls")),
     path('auth/singup', user.views.signup, name="register"),
 
+    # Profile
+    path('profile', user.views.profile, name="my_profile"),
+    path('profile/settings', user.views.settings, name="my_settings"),
+
     # Blog
-    path("blog", blog.views.blog_category_index),
-    path("blog/category/<slug>", blog.views.blog_category_view),
-    path("blog/post/<slug>", blog.views.blog_post_view),
+    path("blog", blog.views.BlogListView.as_view()),
+    path("blog/category/<slug>", blog.views.CategoryListView.as_view()),
+    path("blog/post/<slug>", blog.views.PostDetailView.as_view()),
+    path("page/<slug>", blog.views.PageDetailView.as_view()),
 
     # Examination
     path('examination/', examination.views.TestListView.as_view(), name="examination_list"),
+    path('examination/my', examination.views.MyTestListView.as_view(), name="my_examination"),
+    path('examination/new', examination.views.TestCreateView.as_view(success_url="/examination/my"), name="examination_new"),
+    path('examination/<pk>/edit', examination.views.TestUpdateView.as_view(success_url="/examination/my"), name="examination_update"),
     path('examination/<pk>', examination.views.TestDetailView.as_view(), name="examination_view"),
+
 ]

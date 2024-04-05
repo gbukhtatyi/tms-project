@@ -1,3 +1,10 @@
-from django.shortcuts import render
+from django import template
 
-# Create your views here.
+register = template.Library()
+
+
+@register.inclusion_tag('comment/show.html')
+def show_comments(model):
+    return {
+        model: model
+    }
