@@ -14,3 +14,14 @@ poetry run django-admin startproject project-name
 
 ```
 
+## 
+
+```angular2html
+
+python manage.py loaddata category.json
+
+python manage.py dumpdata
+
+
+```
+
