@@ -21,7 +21,7 @@ class TestDetailView(DetailView):
 
 
 class MyTestListView(ListView):
-    queryset = Test.objects.filter(is_published=True)
+    queryset = Test.objects.all()
     paginate_by = 20
     template_name = "examination/grid.html"
 

@@ -11,6 +11,9 @@ class Test(models.Model):
     # Flags
     is_published = models.BooleanField(default=0)
 
+    def is_published_label(self):
+        return 'Да' if self.is_published == True else 'Нет'
+
 
 class Question(models.Model):
     # Relations
