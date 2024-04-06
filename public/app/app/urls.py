@@ -44,8 +44,21 @@ urlpatterns = [
     # Examination
     path('examination/', examination.views.TestListView.as_view(), name="examination_list"),
     path('examination/my', examination.views.MyTestListView.as_view(), name="my_examination"),
-    path('examination/new', examination.views.TestCreateView.as_view(success_url="/examination/my"), name="examination_new"),
-    path('examination/<pk>/edit', examination.views.TestUpdateView.as_view(success_url="/examination/my"), name="examination_update"),
+    path('examination/new', examination.views.TestCreateView.as_view(success_url="/examination/my"),
+         name="examination_new"),
+    path('examination/<pk>/edit', examination.views.TestUpdateView.as_view(success_url="/examination/my"),
+         name="examination_update"),
     path('examination/<pk>', examination.views.TestDetailView.as_view(), name="examination_view"),
 
+    # API
+    # * Auth
+    path("api/auth/", include("djoser.urls.jwt")),
+    # * User
+    path("api/user/", include("user.api.urls")),
+    # * blog
+    path("api/blog/", include("blog.api.urls")),
+    # * Comment
+    path("api/comment", include("comment.api.urls")),
+    # * Examination
+    path("api/examination/", include("examination.api.urls")),
 ]
