@@ -2,6 +2,12 @@
 
 {% load crispy_forms_tags %}
 
+{% block page_title %}
+
+    <h2>Редактирование теста: {{ test.name }}</h2>
+
+{% endblock page_title %}
+
 {% block page_content %}
 
     <form method="post">

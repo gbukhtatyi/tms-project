@@ -1,33 +1,26 @@
 # Django
 from django.views.decorators.csrf import csrf_exempt
-# Rest
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
+# Django Rest
+from rest_framework import generics
 # Application
-from comment.services import add_comment
+from comment.api.serializers import CommentSerializer, CommentListSerializer
+from comment.models import Comment
 
 
-@csrf_exempt
-@api_view(["POST"])
-def create_comment(request):
-    '''
-    Добавление комментария к выбранной модели
-    :param model:
-    :return:
-    '''
+class CommentListCreateView(generics.ListCreateAPIView):
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return CommentSerializer
+        return CommentListSerializer
 
-    model_type = request.data.get('type')
-    model_type_id = request.data.get('type_id')
-    content = request.data.get('content')
+    def get_queryset(self):
+        model_type = self.request.data.get('type_source')
+        model_type_id = self.request.data.get('type_id')
 
-    add_comment(
-        request.user.id,
-        model_type,
-        model_type_id,
-        content
-    )
+        return Comment.objects.filter(
+            type_source=model_type,
+            type_id=model_type_id
+        )
 
-    return Response(
-        data={"status": "ok"},
-        status=201
-    )
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

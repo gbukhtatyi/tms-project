@@ -1,1 +1,9 @@
-Comments for model ID: {{ model.id }}
+<div class="row">
+    <div class="col-sm-12">
+        {% for comment in comments %}
+            {% include "comment/card.html" with comment=comment %}
+        {% empty %}
+            <p>Нет информаций для отображения.</p>
+        {% endfor %}
+    </div>
+</div>

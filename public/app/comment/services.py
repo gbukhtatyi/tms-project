@@ -1,7 +1,6 @@
 
 from utilities.models import get_dynamic_model
 
-
 def add_comment(
         user_id: int,
         type: str,

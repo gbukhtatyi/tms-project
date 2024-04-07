@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 # Application
 import app.views
+import comment.views
 import blog.views
 import examination.views
 import user.views
@@ -35,11 +36,14 @@ urlpatterns = [
     path('profile', user.views.profile, name="my_profile"),
     path('profile/settings', user.views.settings, name="my_settings"),
 
+    # Comment
+    path("comment/add", comment.views.add_comment, name="add_comment"),
+
     # Blog
     path("blog", blog.views.BlogListView.as_view()),
-    path("blog/category/<slug>", blog.views.CategoryListView.as_view()),
-    path("blog/post/<slug>", blog.views.PostDetailView.as_view()),
-    path("page/<slug>", blog.views.PageDetailView.as_view()),
+    path("blog/category/<slug>", blog.views.CategoryListView.as_view(), name="category_view"),
+    path("blog/post/<slug>", blog.views.PostDetailView.as_view(), name="post_view"),
+    path("page/<slug>", blog.views.PageDetailView.as_view(), name="page_view"),
 
     # Examination
     path('examination/', examination.views.TestListView.as_view(), name="examination_list"),
