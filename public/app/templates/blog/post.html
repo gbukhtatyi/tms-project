@@ -2,12 +2,22 @@
 
 {% block page_title %}
 
-    Post
+    <h2>Блог: {{ post.name }} <small>опубликовано: {{ post.published_at|date:"jS F Y" }}</small></h2>
 
 {% endblock page_title %}
 
 {% block page_content %}
 
-    Test
+    <div class="row">
+        <div class="col-md-12">
+            <div class="p-3 my-3 bg-white rounded shadow-sm">
+                {{ post.content }}
+            </div>
+        </div>
+    </div>
+
+    <hr/>
+
+    {% include 'comment/section.html' with model=post %}
 
 {% endblock page_content %}

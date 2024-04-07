@@ -2,12 +2,35 @@
 
 {% block page_title %}
 
-    Examination - View
+    <h2>Тест - {{ test.name }}</h2>
 
 {% endblock page_title %}
 
 {% block page_content %}
 
-    View
+    {% if user.is_authenticated and test.user_id == user.id %}
+        <div class="row">
+            <div class="col-lg-12 mb-3 text-end">
+                <a href="{% url 'examination_update' pk=test.id %}" class="btn btn-dark">Редактировать</a>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-lg-12 mb-3">
+            <h3>Описание теста:</h3>
+            {{ test.description }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 mb-3 text-center">
+            <a href="{% url 'examination_update' pk=test.id %}" class="btn btn-dark">Пройти тест</a>
+        </div>
+    </div>
+
+    <hr/>
+
+    {% include 'comment/section.html' with model=test %}
 
 {% endblock page_content %}

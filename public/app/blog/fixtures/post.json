@@ -1,0 +1,38 @@
+[
+  {
+    "model": "blog.post",
+    "pk": 1,
+    "fields": {
+      "slug": "news-1",
+      "name": "Загловок 1",
+      "content": "Контенте 1",
+      "published_at": "2024-01-01T12:00:00",
+      "created_at": "2024-04-04T06:58:58.570",
+      "updated_at": "2024-04-04T06:58:58.570"
+    }
+  },
+  {
+    "model": "blog.post",
+    "pk": 2,
+    "fields": {
+      "slug": "news-2",
+      "name": "Загловок 2",
+      "content": "Контенте 2",
+      "published_at": "2024-01-01T12:00:00",
+      "created_at": "2024-04-04T06:58:58.570",
+      "updated_at": "2024-04-04T06:58:58.570"
+    }
+  },
+  {
+    "model": "blog.post",
+    "pk": 3,
+    "fields": {
+      "slug": "news-3",
+      "name": "Загловок 3",
+      "content": "Контенте 3",
+      "published_at": "2024-01-01T12:00:00",
+      "created_at": "2024-04-04T06:58:58.570",
+      "updated_at": "2024-04-04T06:58:58.570"
+    }
+  }
+]

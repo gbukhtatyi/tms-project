@@ -1,0 +1,15 @@
+<div class="col-lg-4 mb-4">
+    <div class="card h-100">
+        <div class="card-body">
+            <h4 class="card-title">
+                <a href="{% url 'examination_view' pk=test.id %}">{{ test.name }}</a>
+            </h4>
+            <div class="card-text">
+                {{ test.description|truncatechars:64 }}
+            </div>
+        </div>
+        <div class="card-footer">
+            Автор: {{ test.user|default:"аноним" }}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+{% extends "layout/default.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block page_title %}
+    <h2>Настройки</h2>
+{% endblock page_title %}
+
+{% block page_content %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form | crispy }}
+        <button type="submit" class="btn btn-dark">Сохранить</button>
+    </form>
+
+{% endblock page_content %}

@@ -1,75 +1,34 @@
 from datetime import datetime
 # Django
-from django.http import Http404
-from django.shortcuts import render, get_object_or_404
+from django.views.generic import DetailView
+from django.views.generic.list import ListView
 # Application
 from blog.models import Page, Category, Post
 
 
-def blog_category_index(request):
-    posts = Post.objects.all()
-
-    return render(
-        request,
-        "blog/index.html",
-        {
-            "posts": posts
-        }
-    )
+class BlogListView(ListView):
+    model = Post
+    queryset = Post.objects.filter(published_at__lte=datetime.now())
+    template_name = "blog/index.html"
 
 
-def blog_page_view(request, slug):
-    '''
+class CategoryListView(ListView):
+    model = Post
+    queryset = Post.objects.filter(published_at__lte=datetime.now())
+    template_name = "blog/category.html"
 
-    :param request:
-    :param slug:
-    :return:
-    '''
-    page = get_object_or_404(Page, slug=slug)
-
-    return render(
-        request,
-        "blog/page.html",
-        {
-            "post": page
-        }
-    )
+    def get_queryset(self, **kwargs):
+        qs = super().get_queryset(**kwargs)
+        return qs.filter(category_id=1)
 
 
-def blog_category_view(request, slug):
-    '''
-
-    :param request:
-    :param slug:
-    :return:
-    '''
-    category = get_object_or_404(Category, slug=slug)
-
-    return render(
-        request,
-        "blog/category.html",
-        {
-            "category": category
-        }
-    )
+class PostDetailView(DetailView):
+    model = Post
+    queryset = Post.objects.filter(published_at__lte=datetime.now())
+    template_name = "blog/post.html"
 
 
-def blog_post_view(request, slug):
-    '''
-
-    :param request:
-    :param slug:
-    :return:
-    '''
-    post = get_object_or_404(Post, slug=slug)
-
-    if (post.updated_at <= datetime.now()):
-        raise Http404("Post does not exist")
-
-    return render(
-        request,
-        "blog/post.html",
-        {
-            "post": post
-        }
-    )
+class PageDetailView(DetailView):
+    model = Page
+    queryset = Page.objects.filter(published_at__lte=datetime.now())
+    template_name = "blog/page.html"

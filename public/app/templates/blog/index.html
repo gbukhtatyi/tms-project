@@ -2,12 +2,18 @@
 
 {% block page_title %}
 
-    Новости проекта
+    <h2>Новости проекта</h2>
 
 {% endblock page_title %}
 
 {% block page_content %}
 
-    Posts
+    <div class="row">
+        {% for post in object_list %}
+            {% include "blog/post/card.html" with post=post %}
+        {% empty %}
+            <p>No articles yet.</p>
+        {% endfor %}
+    </div>
 
 {% endblock page_content %}

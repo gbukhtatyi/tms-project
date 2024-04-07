@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 # Application
 import app.views
+import comment.views
 import blog.views
 import examination.views
 import user.views
@@ -31,12 +32,37 @@ urlpatterns = [
     path('auth/', include("django.contrib.auth.urls")),
     path('auth/singup', user.views.signup, name="register"),
 
+    # Profile
+    path('profile', user.views.profile, name="my_profile"),
+    path('profile/settings', user.views.settings, name="my_settings"),
+
+    # Comment
+    path("comment/add", comment.views.add_comment, name="add_comment"),
+
     # Blog
-    path("blog", blog.views.blog_category_index),
-    path("blog/category/<slug>", blog.views.blog_category_view),
-    path("blog/post/<slug>", blog.views.blog_post_view),
+    path("blog", blog.views.BlogListView.as_view()),
+    path("blog/category/<slug>", blog.views.CategoryListView.as_view(), name="category_view"),
+    path("blog/post/<slug>", blog.views.PostDetailView.as_view(), name="post_view"),
+    path("page/<slug>", blog.views.PageDetailView.as_view(), name="page_view"),
 
     # Examination
     path('examination/', examination.views.TestListView.as_view(), name="examination_list"),
+    path('examination/my', examination.views.MyTestListView.as_view(), name="my_examination"),
+    path('examination/new', examination.views.TestCreateView.as_view(success_url="/examination/my"),
+         name="examination_new"),
+    path('examination/<pk>/edit', examination.views.TestUpdateView.as_view(success_url="/examination/my"),
+         name="examination_update"),
     path('examination/<pk>', examination.views.TestDetailView.as_view(), name="examination_view"),
+
+    # API
+    # * Auth
+    path("api/auth/", include("djoser.urls.jwt")),
+    # * User
+    path("api/user/", include("user.api.urls")),
+    # * blog
+    path("api/blog/", include("blog.api.urls")),
+    # * Comment
+    path("api/comment", include("comment.api.urls")),
+    # * Examination
+    path("api/examination/", include("examination.api.urls")),
 ]

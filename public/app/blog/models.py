@@ -19,9 +19,10 @@ class Page(models.Model):
 
 class Category(models.Model):
     # Data
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True)
     name = models.CharField(max_length=64)
     description = models.CharField(max_length=256)
+    published_at = models.DateTimeField(null=True)
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -37,7 +38,7 @@ class Post(models.Model):
     # Relations
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, verbose_name="Category", null=True)
     # Data
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True)
     name = models.CharField(max_length=64)
     content = models.TextField(max_length=50)
     allow_comment = models.BooleanField(default=True)

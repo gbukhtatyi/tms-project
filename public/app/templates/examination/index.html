@@ -2,37 +2,20 @@
 
 {% block page_title %}
 
-    Examination - Index
+    <h2>Доступные тесты:</h2>
 
 {% endblock page_title %}
 
 {% block page_content %}
 
+    <div class="row">
     {% for test in object_list %}
-        <li>{{ test.id }}</li>
+        {% include "examination/test/card.html" with test=test %}
     {% empty %}
-        <p>No articles yet.</p>
+        <p>Нет информацией для отображения</p>
     {% endfor %}
+    </div>
 
-    {% if is_paginated %}
-
-        <div class="pagination">
-
-            <span class="page-links">
-                {% if page_obj.has_previous %}
-                    <a href="{% url 'examination_list' %}?page={{ page_obj.previous_page_number }}">previous</a>
-                {% endif %}
-                <span class="page-current">
-                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                </span>
-                {% if page_obj.has_next %}
-                    <a href="{% url 'examination_list' %}?page={{ page_obj.next_page_number }}">next</a>
-                {% endif %}
-            </span>
-        
-        </div>
-
-    {% endif %}
-
+    {% include 'components/pagination/default.html' with url_name='examination_list' %}
 
 {% endblock page_content %}
