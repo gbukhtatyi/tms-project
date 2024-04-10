@@ -48,11 +48,22 @@ urlpatterns = [
     # Examination
     path('examination/', examination.views.TestListView.as_view(), name="examination_list"),
     path('examination/my', examination.views.MyTestListView.as_view(), name="my_examination"),
-    path('examination/new', examination.views.TestCreateView.as_view(success_url="/examination/my"),
-         name="examination_new"),
-    path('examination/<pk>/edit', examination.views.TestUpdateView.as_view(success_url="/examination/my"),
-         name="examination_update"),
-    path('examination/<pk>', examination.views.TestDetailView.as_view(), name="examination_view"),
+
+    # * Answer
+    path('examination/answer/remove/<pk>', examination.views.AnswerRemoveView.as_view(), name="answer_remove"),
+    path('examination/answer/edit/<pk>', examination.views.AnswerUpdateView.as_view(), name="answer_update"),
+    path('examination/answer/new/<pk>', examination.views.AnswerCreateView.as_view(), name='answer_new'),
+
+    # * Question
+    path('examination/question/remove/<pk>', examination.views.QuestionRemoveView.as_view(), name="question_remove"),
+    path('examination/question/edit/<pk>/answers', examination.views.save_question_answers,name="question_answers"),
+    path('examination/question/edit/<pk>', examination.views.QuestionUpdateView.as_view(),name="question_update"),
+    path('examination/question/new/<pk>', examination.views.QuestionCreateView.as_view(), name="question_new"),
+
+    # * Test
+    path('examination/test/<pk>/edit', examination.views.TestUpdateView.as_view(success_url="/examination/my"), name="examination_update"),
+    path('examination/test/<pk>', examination.views.TestDetailView.as_view(), name="examination_view"),
+    path('examination/test/new', examination.views.TestCreateView.as_view(success_url="/examination/my"), name="examination_new"),
 
     # API
     # * Auth

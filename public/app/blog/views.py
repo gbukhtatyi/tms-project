@@ -1,5 +1,6 @@
 from datetime import datetime
 # Django
+from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView
 from django.views.generic.list import ListView
 # Application
@@ -19,7 +20,12 @@ class CategoryListView(ListView):
 
     def get_queryset(self, **kwargs):
         qs = super().get_queryset(**kwargs)
-        return qs.filter(category_id=1)
+        return qs.filter(category__slug=self.kwargs.get('slug'))
+
+    def get_context_data(self, **kwargs):
+        context = super(ListView, self).get_context_data(**kwargs)
+        context['category'] = get_object_or_404(Category, slug=self.kwargs.get('slug'))
+        return context
 
 
 class PostDetailView(DetailView):

@@ -1,0 +1,83 @@
+{% extends "layout/default.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block page_title %}
+
+    <h2>Редактирование вопроса в тесте: {{ test.name }}</h2>
+
+{% endblock page_title %}
+
+{% block page_content %}
+    <div class="row gx-4 justify-content-center my-4">
+        <div class="col-lg-8">
+            <form method="post">
+                {% csrf_token %}
+
+                {{ form | crispy }}
+
+                <button type="submit" class="btn btn-dark">Сохранить</button>
+
+                {% if object.test_id %}
+                    <a href="{% url 'examination_update' pk=object.test_id %}" class="btn btn-light">Вернуться к
+                        тесту</a>
+                {% else %}
+                    <a href="{% url 'examination_update' pk=view.test_id %}" class="btn btn-light">Вернуться к тесту</a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+    {% if object.id %}
+        <div class="row gx-4 my-4">
+            <form action="{% url "question_answers" pk=object.id %}" method="POST">
+            {% csrf_token %}
+            <div class="col-lg-12">
+                <h3>Список ответов</h3>
+                <p class="text-end">
+                    <a href="{% url "answer_new" pk=object.id %}" class="btn btn-dark">Добавить ответ</a>
+                </p>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Укажите правильные ответы</th>
+                        <th>Тип вопроса</th>
+                        <th>Вопрос</th>
+                        <th colspan="2"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for answer in question.answer_set.all %}
+                        <tr>
+                            <td>
+                                {% if object.type == 'one' %}
+                                    <input type="radio" name="answers[]" value="{{ answer.id }}"
+                                           {% if answer.score > 0  %} checked {% else %} '' {% endif %} />
+                                {% else %}
+                                    <input type="checkbox" name="answers[]" value="{{ answer.id }}"
+                                            {% if answer.score > 0  %} checked {% else %} '' {% endif %} />
+                                {% endif %}
+                            </td>
+                            <td>{{ answer.content|truncatechars:64 }}</td>
+                            <td width="20">
+                                <a href="{% url 'answer_update' pk=answer.id %}" class="btn btn-dark">Просмотр</a>
+                            </td>
+                            <td width="20">
+                                <a href="{% url 'answer_remove' pk=answer.id %}" class="btn btn-danger">Удалить</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4">Нет информации для отображения</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% if question.answer_set.count %}
+                    <button type="submit" class="btn btn-dark">Сохранить правильные ответы</button>
+                {% endif %}
+            </div>
+            </form>
+        </div>
+    {% endif %}
+
+{% endblock page_content %}

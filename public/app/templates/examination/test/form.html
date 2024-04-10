@@ -1,0 +1,62 @@
+{% extends "layout/default.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block page_title %}
+
+    <h2>Редактирование теста: {{ test.name }}</h2>
+
+{% endblock page_title %}
+
+{% block page_content %}
+    <div class="row gx-4 justify-content-center my-4">
+        <div class="col-lg-8">
+            <form method="post">
+                {% csrf_token %}
+
+                {{ form | crispy }}
+
+                <button type="submit" class="btn btn-dark">Сохранить</button>
+                {% if object.id %}
+                <a href="{% url 'examination_view' pk=object.id %}" class="btn btn-light">Вернуться к просмотру</a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+    <div class="row gx-4 my-4">
+        <div class="col-lg-12">
+            <h3>Список вопросов</h3>
+            <p class="text-end">
+                <a href="{% url "question_new" pk=test.id %}" class="btn btn-dark">Добавить вопрос</a>
+            </p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Тип вопроса</th>
+                    <th>Вопрос</th>
+                    <th colspan="2"></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for question in test.question_set.all %}
+                    <tr>
+                        <td>{{ question.type }}</td>
+                        <td>{{ question.content|truncatechars:64 }}</td>
+                        <td width="20">
+                            <a href="{% url 'question_update' pk=question.id %}" class="btn btn-dark" >Просмотр</a>
+                        </td>
+                        <td width="20">
+                            <a href="{% url 'question_remove' pk=question.id %}" class="btn btn-danger" >Удалить</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4"></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock page_content %}

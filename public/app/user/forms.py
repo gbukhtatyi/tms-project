@@ -14,8 +14,8 @@ class SignupForm(UserCreationForm):
 
 
 class ProfileForm(forms.ModelForm):
-    first_name = forms.CharField(max_length=200, required=True)
-    last_name = forms.CharField(max_length=200, required=True)
+    first_name = forms.CharField(max_length=200, required=True, label="Имя")
+    last_name = forms.CharField(max_length=200, required=True, label="Фамилия")
     email = forms.EmailField(
         widget=forms.TextInput(attrs={'readonly': 'readonly'})
     )
@@ -26,6 +26,7 @@ class ProfileForm(forms.ModelForm):
 
 
 class SettingsForm(forms.ModelForm):
+    is_subscribed = forms.BooleanField(required=True, label="Оповещение при событиях на площадке")
     class Meta:
         model = User
         fields = ('is_subscribed',)

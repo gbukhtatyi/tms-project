@@ -1,12 +1,14 @@
 # Django
-from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView
 from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.db.models import Q
 # Application
-from .models import Test
+from .models import Test, Question, Answer
 
 
 class TestListView(ListView):
@@ -41,7 +43,7 @@ class MyTestListView(ListView):
 class TestCreateView(CreateView):
     model = Test
     fields = ["name", "description", "is_published"]
-    template_name = "examination/form.html"
+    template_name = "examination/test/form.html"
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -51,10 +53,107 @@ class TestCreateView(CreateView):
 class TestUpdateView(UpdateView):
     model = Test
     fields = ["name", "description", "is_published"]
-    template_name = "examination/form.html"
+    template_name = "examination/test/form.html"
 
     def get_queryset(self, **kwargs):
         return super().get_queryset(**kwargs).filter(user_id=self.request.user.id)
+
+
+class QuestionCreateView(CreateView):
+    model = Question
+    fields = ["type", "content"]
+    template_name = "examination/question/form.html"
+
+    def get(self, request, *args, **kwargs):
+        self.test_id = self.kwargs.get('pk')
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.test_id = self.kwargs.get('pk')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('question_update', kwargs={'pk': self.object.question_id})
+
+
+class QuestionUpdateView(UpdateView):
+    model = Question
+    fields = ["type", "content"]
+    template_name = "examination/question/form.html"
+
+    def get(self, request, *args, **kwargs):
+        self.test_id = kwargs.get('pk')
+        return super().get(request, *args, **kwargs)
+
+    def get_queryset(self, **kwargs):
+        return super().get_queryset(**kwargs).filter(test__user_id=self.request.user.id)
+
+    def get_success_url(self):
+        return reverse('question_update', kwargs={'pk': self.object.id})
+
+
+class QuestionRemoveView(DeleteView):
+    model = Question
+
+    def get(self, *args, **kwargs):
+        return self.delete(*args, **kwargs)
+
+    def get_queryset(self, **kwargs):
+        return super().get_queryset(**kwargs).filter(test__user_id=self.request.user.id)
+
+    def get_success_url(self):
+        return reverse('examination_update', kwargs={'pk': self.object.test.id})
+
+
+def save_question_answers(request, pk):
+    correct_answers_id = request.POST.getlist('answers[]')
+
+    Answer.objects.filter(question_id=pk).update(score=0)
+    Answer.objects.filter(question_id=pk).filter(id__in=correct_answers_id).update(score=1)
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+
+class AnswerCreateView(CreateView):
+    model = Answer
+    fields = ["content"]
+    template_name = "examination/answer/form.html"
+
+    def get(self, request, *args, **kwargs):
+        self.question_id = self.kwargs.get('pk')
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.question_id = self.kwargs.get('pk')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('question_update', kwargs={'pk': self.object.question.id})
+
+
+class AnswerUpdateView(UpdateView):
+    model = Answer
+    fields = ["content"]
+    template_name = "examination/answer/form.html"
+
+    def get_queryset(self, **kwargs):
+        return super().get_queryset(**kwargs).filter(question__test__user_id=self.request.user.id)
+
+    def get_success_url(self):
+        return reverse('question_update', kwargs={'pk': self.object.question.id})
+
+
+class AnswerRemoveView(DeleteView):
+    model = Answer
+
+    def get(self, *args, **kwargs):
+        return self.delete(*args, **kwargs)
+
+    def get_queryset(self, **kwargs):
+        return super().get_queryset(**kwargs).filter(question__test__user_id=self.request.user.id)
+
+    def get_success_url(self):
+        return reverse('question_update', kwargs={'pk': self.object.question.id})
 
 
 @login_required

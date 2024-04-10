@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+{% include "layout/blocks/head.html" %}
+
+<body class="bg-light">
+
+{% include "layout/blocks/header.html" %}
+
+<main role="main">
+    <div class="container">
+        <div class="d-flex align-items-center p-3 my-3 bg-white rounded shadow-sm">
+            {% block page_title %}
+                <h2>Дипломный проект: TMS - Курс Python 2024 год</h2>
+            {% endblock page_title %}
+        </div>
+
+        {% if errors %}
+            <div class="row">
+                <div class="col-md-8">
+                    {% for error in errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="row gx-4 justify-content-center">
+            <div class="col-lg-8">
+                {% block page_content %}
+                    <div class="d-flex align-items-center p-3 my-3 bg-white rounded shadow-sm">
+
+                        <p>Default Content</p>
+                    </div>
+                {% endblock page_content %}
+            </div>
+        </div>
+    </div>
+</main>
+
+{% include "layout/blocks/footer.html" %}
+</body>
+</html>
