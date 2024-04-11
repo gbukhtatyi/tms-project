@@ -61,6 +61,9 @@ urlpatterns = [
     path('examination/question/new/<int:pk>', examination.views.QuestionCreateView.as_view(), name="question_new"),
 
     # * Test
+    path('examination/test/finish', examination.views.examination_finish, name="examination_finish"),
+    path('examination/test/current', examination.views.examination_current, name="examination_current"),
+    path('examination/test/<int:pk>/start', examination.views.examination_start, name="examination_start"),
     path('examination/test/<int:pk>/edit', examination.views.TestUpdateView.as_view(success_url="/examination/my"), name="examination_update"),
     path('examination/test/<int:pk>', examination.views.TestDetailView.as_view(), name="examination_view"),
     path('examination/test/new', examination.views.TestCreateView.as_view(success_url="/examination/my"), name="examination_new"),
