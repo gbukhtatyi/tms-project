@@ -1,0 +1,33 @@
+{% extends "layout/default.html" %}
+
+{% block page_title %}
+
+    <h2>Просмотр вопросов по тесту: {{ test.name }}</h2>
+
+{% endblock page_title %}
+
+{% block page_content %}
+
+    {% for question in test.question_set.all %}
+        <div class="row gx-4 justify-content-center">
+            <div class="col-lg-8">
+                <div class="p-3 my-3 bg-white rounded shadow-sm">
+                    <h4>Вопрос {{ forloop.counter }}</h4>
+                    <hr/>
+                    <p>{{ question.content }}</p>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="row gx-4 text-center">
+        <div class="col-lg-12">
+            <a href="{% url 'examination_view' pk=test.id %}" class="btn btn-light">Вернуться к тесту</a>
+        </div>
+    </div>
+
+    <hr/>
+
+    {% include 'comment/section.html' with model=test %}
+
+{% endblock page_content %}

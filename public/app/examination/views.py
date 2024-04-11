@@ -11,6 +11,18 @@ from django.db.models import Q
 from .models import Test, Question, Answer, Result, ResultStatus, ResultAnswer
 
 
+def examination_viewing(request, pk):
+    test = get_object_or_404(Test, id=pk)
+
+    return render(
+        request,
+        "examination/viewing/index.html",
+        {
+            "test": test
+        }
+    )
+
+
 def examination_start(request, pk):
     test = get_object_or_404(Test, id=pk)
     currentResult = Result.objects.filter(user=request.user).filter(status=ResultStatus.NEW).first()
