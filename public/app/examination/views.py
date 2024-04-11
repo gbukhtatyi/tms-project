@@ -15,7 +15,7 @@ def examination_start(request, pk):
     test = get_object_or_404(Test, id=pk)
     currentResult = Result.objects.filter(user=request.user).filter(status=ResultStatus.NEW).first()
 
-    if None == currentResult:
+    if currentResult is None:
         Result.objects.create(
             user=request.user,
             test=test
