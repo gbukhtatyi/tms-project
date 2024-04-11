@@ -10,5 +10,8 @@
 __pycache__
 db.sqlite3
 
+# Services
+sysdumps/postgresql/*
+
 # Logs
 logs/nginx/*.log

@@ -25,11 +25,16 @@
             </div>
         {% endif %}
 
-        {% block page_content %}
-            <div class="d-flex align-items-center p-3 my-3 bg-white rounded shadow-sm">
-                    <p>Default Content</p>
+        <div class="row gx-4 justify-content-center">
+            <div class="col-lg-8">
+                {% block page_content %}
+                    <div class="d-flex align-items-center p-3 my-3 bg-white rounded shadow-sm">
+
+                        <p>Default Content</p>
+                    </div>
+                {% endblock page_content %}
             </div>
-        {% endblock page_content %}
+        </div>
     </div>
 </main>
 

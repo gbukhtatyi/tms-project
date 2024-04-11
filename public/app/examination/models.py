@@ -4,7 +4,8 @@ from django.contrib.auth import get_user_model
 
 class Test(models.Model):
     # Relations
-    user = models.ForeignKey(get_user_model(), null=True, default=None, on_delete=models.SET_DEFAULT, verbose_name="Owner")
+    user = models.ForeignKey(get_user_model(), null=True, default=None, on_delete=models.SET_DEFAULT,
+                             verbose_name="Owner")
     # Data
     name = models.CharField(max_length=250, verbose_name="Навание")
     description = models.CharField(max_length=1024, verbose_name="Описание")
@@ -15,11 +16,16 @@ class Test(models.Model):
         return 'Да' if self.is_published == True else 'Нет'
 
 
+class QuestionType(models.TextChoices):
+    ONE = 'one', 'Один правильный ответ'
+    MULTIPLE = 'multiple', 'Множественный правильный ответ'
+
+
 class Question(models.Model):
     # Relations
     test = models.ForeignKey(Test, on_delete=models.CASCADE, verbose_name="Тест")
     # Data
-    type = models.CharField(max_length=16, verbose_name="Тип вопроса")
+    type = models.CharField(max_length=16, choices=QuestionType, default=QuestionType.ONE, verbose_name="Тип вопроса")
     content = models.CharField(max_length=1024, verbose_name="Вопрос")
 
 

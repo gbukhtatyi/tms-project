@@ -1,0 +1,29 @@
+{% extends "layout/default.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block page_title %}
+
+    <h2>Редактирование ответа в вопросе: {{ test.name }}</h2>
+
+{% endblock page_title %}
+
+{% block page_content %}
+    <div class="row gx-4 justify-content-center my-4">
+        <div class="col-lg-8">
+            <form method="post">
+                {% csrf_token %}
+
+                {{ form | crispy }}
+
+                <button type="submit" class="btn btn-dark">Сохранить</button>
+                {% if object.question_id %}
+                    <a href="{% url 'question_update' pk=object.question_id %}" class="btn btn-light">Вернуться к тесту</a>
+                {% else %}
+                    <a href="{% url 'question_update' pk=view.question_id %}" class="btn btn-light">Вернуться к тесту</a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+{% endblock page_content %}

@@ -10,9 +10,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
 import datetime
 from pathlib import Path
+from dotenv  import load_dotenv
 from django.utils import timezone
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,7 +33,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
-    "localhost"
+    "localhost",
+    "project.local",
 ]
 
 # Application definition
@@ -120,8 +126,12 @@ STATICFILES_DIRS = [
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': os.getenv("DATABASE_ENGINE", default='django.db.backends.sqlite3'),
+        'NAME': os.getenv("DATABASE_NAME", default=BASE_DIR / 'db.sqlite3'),
+        "USER": os.getenv("DATABASE_USER", default=''),
+        "PASSWORD": os.getenv("DATABASE_PASSWORD", default=''),
+        "HOST": os.getenv("DATABASE_HOST", default=''),
+        "PORT": os.getenv("DATABASE_PORT", default=5432),
     }
 }
 
