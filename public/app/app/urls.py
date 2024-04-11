@@ -50,19 +50,22 @@ urlpatterns = [
     path('examination/my', examination.views.MyTestListView.as_view(), name="my_examination"),
 
     # * Answer
-    path('examination/answer/remove/<pk>', examination.views.AnswerRemoveView.as_view(), name="answer_remove"),
-    path('examination/answer/edit/<pk>', examination.views.AnswerUpdateView.as_view(), name="answer_update"),
-    path('examination/answer/new/<pk>', examination.views.AnswerCreateView.as_view(), name='answer_new'),
+    path('examination/answer/remove/<int:pk>', examination.views.AnswerRemoveView.as_view(), name="answer_remove"),
+    path('examination/answer/edit/<int:pk>', examination.views.AnswerUpdateView.as_view(), name="answer_update"),
+    path('examination/answer/new/<int:pk>', examination.views.AnswerCreateView.as_view(), name='answer_new'),
 
     # * Question
-    path('examination/question/remove/<pk>', examination.views.QuestionRemoveView.as_view(), name="question_remove"),
-    path('examination/question/edit/<pk>/answers', examination.views.save_question_answers,name="question_answers"),
-    path('examination/question/edit/<pk>', examination.views.QuestionUpdateView.as_view(),name="question_update"),
-    path('examination/question/new/<pk>', examination.views.QuestionCreateView.as_view(), name="question_new"),
+    path('examination/question/remove/<int:pk>', examination.views.QuestionRemoveView.as_view(), name="question_remove"),
+    path('examination/question/edit/<int:pk>/answers', examination.views.save_question_answers,name="question_answers"),
+    path('examination/question/edit/<int:pk>', examination.views.QuestionUpdateView.as_view(),name="question_update"),
+    path('examination/question/new/<int:pk>', examination.views.QuestionCreateView.as_view(), name="question_new"),
 
     # * Test
-    path('examination/test/<pk>/edit', examination.views.TestUpdateView.as_view(success_url="/examination/my"), name="examination_update"),
-    path('examination/test/<pk>', examination.views.TestDetailView.as_view(), name="examination_view"),
+    path('examination/test/finish', examination.views.examination_finish, name="examination_finish"),
+    path('examination/test/current', examination.views.examination_current, name="examination_current"),
+    path('examination/test/<int:pk>/start', examination.views.examination_start, name="examination_start"),
+    path('examination/test/<int:pk>/edit', examination.views.TestUpdateView.as_view(success_url="/examination/my"), name="examination_update"),
+    path('examination/test/<int:pk>', examination.views.TestDetailView.as_view(), name="examination_view"),
     path('examination/test/new', examination.views.TestCreateView.as_view(success_url="/examination/my"), name="examination_new"),
 
     # API

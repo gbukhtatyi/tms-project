@@ -1,0 +1,18 @@
+{% extends "layout/default.html" %}
+
+{% block page_title %}
+
+    <h2>Результаты тестирования: {{ result.test.name }}</h2>
+
+{% endblock page_title %}
+
+{% block page_content %}
+
+    <div class="row gx-4 justify-content-center">
+        <div class="col-lg-8 text-center">
+            <h3>Поздравляем!</h3>
+            <h3>Вы набрали {{ result.score }} из {{ result.score_total }} !</h3>
+        </div>
+    </div>
+
+{% endblock page_content %}

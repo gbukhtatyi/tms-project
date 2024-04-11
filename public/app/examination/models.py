@@ -37,10 +37,18 @@ class Answer(models.Model):
     score = models.IntegerField(default=0, verbose_name="Балл")
 
 
+class ResultStatus(models.TextChoices):
+    NEW = 'new', 'Новое тестирование'
+    FINISHED = 'finished', 'Тестирование завершено'
+
+
 class Result(models.Model):
     # Relations
     user = models.ForeignKey(get_user_model(), on_delete=models.SET_DEFAULT, verbose_name="Owner", default=0)
     test = models.ForeignKey(Test, on_delete=models.PROTECT, verbose_name="Test")
+    # Data
+    status = models.CharField(max_length=16, choices=ResultStatus, default=ResultStatus.NEW,
+                              verbose_name="Статус тестирования")
     score = models.IntegerField(default=0)
     score_total = models.IntegerField(default=0)
 

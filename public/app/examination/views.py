@@ -1,14 +1,78 @@
 # Django
 from django.urls import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.db.models import Q
 # Application
-from .models import Test, Question, Answer
+from .models import Test, Question, Answer, Result, ResultStatus, ResultAnswer
+
+
+def examination_start(request, pk):
+    test = get_object_or_404(Test, id=pk)
+    currentResult = Result.objects.filter(user=request.user).filter(status=ResultStatus.NEW).first()
+
+    if currentResult is None:
+        Result.objects.create(
+            user=request.user,
+            test=test
+        )
+
+    return redirect('/examination/test/current')
+
+
+def examination_current(request):
+    result = get_object_or_404(Result, user=request.user, status=ResultStatus.NEW)
+
+    return render(
+        request,
+        "examination/testing/index.html",
+        {
+            "result": result
+        }
+    )
+
+
+def examination_finish(request):
+    result = get_object_or_404(Result, user=request.user, status=ResultStatus.NEW)
+    test = result.test
+
+    score = 0
+    score_total = 0
+    for question in test.question_set.all():
+        correct_answers = Answer.objects.filter(question=question, score__gt=0).only('id')
+        correct_answers = [answer.id for answer in correct_answers]
+
+        answers = request.POST.getlist('questions[' + str(question.id) + ']')
+        answers = [int(value) for value in answers]
+
+        for answer_id in answers:
+            ResultAnswer.objects.create(
+                result=result,
+                question=question,
+                answer_id=answer_id
+            )
+
+        score += int(correct_answers == answers)
+        score_total += 1
+
+    result.score = score
+    result.score_total = score_total
+    result.status = ResultStatus.FINISHED
+    result.save()
+
+    return render(
+        request,
+        "examination/testing/finished.html",
+        {
+            "result": result
+        }
+    )
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
 class TestListView(ListView):
@@ -73,7 +137,7 @@ class QuestionCreateView(CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('question_update', kwargs={'pk': self.object.question_id})
+        return reverse('question_update', kwargs={'pk': self.object.id})
 
 
 class QuestionUpdateView(UpdateView):
@@ -106,6 +170,7 @@ class QuestionRemoveView(DeleteView):
 
 
 def save_question_answers(request, pk):
+    '''Сохранение правильных ответов для вопроса'''
     correct_answers_id = request.POST.getlist('answers[]')
 
     Answer.objects.filter(question_id=pk).update(score=0)
@@ -200,9 +265,4 @@ def examination_export(request):
 
 @login_required
 def download_template():
-    '''
-
-    :return:
-    '''
-
     pass

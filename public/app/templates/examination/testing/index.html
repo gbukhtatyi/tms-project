@@ -1,0 +1,51 @@
+{% extends "layout/default.html" %}
+
+{% block page_title %}
+
+    <h2>Тестирование: {{ result.test.name }}</h2>
+
+{% endblock page_title %}
+
+{% block page_content %}
+    <form action="{% url 'examination_finish' %}" method="POST">
+        {% csrf_token %}
+        {% for question in result.test.question_set.all %}
+            <div class="row gx-4 justify-content-center">
+                <div class="col-lg-8">
+                    <div class="p-3 my-3 bg-white rounded shadow-sm">
+                        <h4>Вопрос {{ forloop.counter }}</h4>
+                        <hr/>
+                        <p>{{ question.content }}</p>
+                        {% if question.type == 'one' %}
+                            <p>Выберите один ответ из предложеных:</p>
+                        {% else %}
+                            <p>Вы можете выбрать несколько ответов:</p>
+                        {% endif %}
+                        <ul class="list-group list-group-flush">
+                            {% for answer in question.answer_set.all %}
+                                <li class="list-group-item">
+                                    {% if question.type == 'one' %}
+                                        <input type="radio" id="answer-{{ answer.id }}"
+                                               name="questions[{{ question.id }}]"
+                                               value="{{ answer.id }}"/>
+                                    {% else %}
+                                        <input type="checkbox" id="answer-{{ answer.id }}"
+                                               name="questions[{{ question.id }}]"
+                                               value="{{ answer.id }}"/>
+                                    {% endif %}
+                                    <label for="answer-{{ answer.id }}">{{ answer.content }}</label></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="row gx-4 text-center">
+            <div class="col-lg-12">
+                <button type="submit" class="btn btn-dark">Завершить</button>
+            </div>
+        </div>
+    </form>
+
+
+{% endblock page_content %}
