@@ -116,6 +116,16 @@ class MyTestListView(ListView):
         return qs.filter(user_id=self.request.user.id)
 
 
+class MyResultListView(ListView):
+    queryset = Result.objects
+    paginate_by = 20
+    template_name = "examination/my/result.html"
+
+    def get_queryset(self, **kwargs):
+        qs = super().get_queryset(**kwargs)
+        return qs.filter(user_id=self.request.user.id)
+
+
 class TestCreateView(CreateView):
     model = Test
     fields = ["name", "description", "is_published"]

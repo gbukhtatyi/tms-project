@@ -48,6 +48,7 @@ urlpatterns = [
     # Examination
     path('examination/', examination.views.TestListView.as_view(), name="examination_list"),
     path('examination/my', examination.views.MyTestListView.as_view(), name="my_examination"),
+    path('examination/my/results', examination.views.MyResultListView.as_view(), name="my_result"),
 
     # * Answer
     path('examination/answer/remove/<int:pk>', examination.views.AnswerRemoveView.as_view(), name="answer_remove"),

@@ -51,6 +51,9 @@ class Result(models.Model):
                               verbose_name="Статус тестирования")
     score = models.IntegerField(default=0)
     score_total = models.IntegerField(default=0)
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 class ResultAnswer(models.Model):
