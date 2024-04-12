@@ -13,29 +13,51 @@ services:
     ports:
       - 5432:5432
 
-#  http-balancer:
-#    image: nginx:1.25.4-alpine
-#    ports:
-#      - "80:80"
-#    volumes:
-#      - ./configs/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
-#      - ./public/app/static:/var/www/static:ro
-#      - ./logs/nginx:/var/log/nginx
-#    depends_on:
-#      - backend
+  http-balancer:
+    image: nginx:1.25.4-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./configs/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./public/app/static:/var/www/static:ro
+      - ./logs/nginx:/var/log/nginx
+    depends_on:
+      - backend
 
-#  backend:
-#    image: $BACKEND_IMAGE_NAME:$BACKEND_IMAGE_VERSION
-#    build: public/app
-#    restart: always
-#    command: python -Wd manage.py runserver 0.0.0.0:8000
-#    depends_on:
-#      - cache
-#      - mailhog
+  backend:
+    image: $BACKEND_IMAGE_NAME:$BACKEND_IMAGE_VERSION
+    build: public/app
+    restart: always
+    command: python -Wd manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - cache
+      - mailhog
 
-#  cache:
-#    restart: always
-#    image: redis:latest
+  cache:
+    image: redis:latest
+    restart: always
+
+  celery-worker:
+    image: $BACKEND_IMAGE_NAME:$BACKEND_IMAGE_VERSION
+    restart: always
+    command: celery -A app worker -l DEBUG -c 1 -Q celery -n main
+    depends_on:
+      - database
+      - rabbitmq
+      - cache
+      - backend
+
+  rabbitmq:
+    image: rabbitmq:3.10.7-management
+    hostname: drf_rabbitmq
+    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=$RABBITMQ_DEFAULT_USER
+      - RABBITMQ_DEFAULT_PASS=$RABBITMQ_DEFAULT_PASS
+      - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit log_levels [{connection,error},{default,error}] disk_free_limit 2147483648
+    ports:
+      - 15672:15672
+      - 5672:5672
 
   mailhog:
     image: mailhog/mailhog
