@@ -64,6 +64,9 @@ class Result(models.Model):
         if self.status == ResultStatus.FINISHED:
             result_created.apply_async(args=[self.id])
 
+    class Meta:
+        ordering = ['-created_at']
+
 
 class ResultAnswer(models.Model):
     # Relations

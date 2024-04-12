@@ -23,6 +23,7 @@ def examination_viewing(request, pk):
     )
 
 
+@login_required
 def examination_start(request, pk):
     test = get_object_or_404(Test, id=pk)
     currentResult = Result.objects.filter(user=request.user).filter(status=ResultStatus.NEW).first()
@@ -36,6 +37,7 @@ def examination_start(request, pk):
     return redirect('/examination/test/current')
 
 
+@login_required
 def examination_current(request):
     result = get_object_or_404(Result, user=request.user, status=ResultStatus.NEW)
 
@@ -47,7 +49,7 @@ def examination_current(request):
         }
     )
 
-
+@login_required
 def examination_finish(request):
     result = get_object_or_404(Result, user=request.user, status=ResultStatus.NEW)
     test = result.test
@@ -99,7 +101,7 @@ class TestDetailView(DetailView):
 
     def get_queryset(self, **kwargs):
         qs = super().get_queryset(**kwargs)
-        if (self.request.user):
+        if (self.request.user.id is not None):
             qs = qs.filter(Q(is_published=True) | Q(user=self.request.user))
         else:
             qs = qs.filter(is_published=True)
