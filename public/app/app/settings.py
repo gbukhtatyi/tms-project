@@ -137,12 +137,13 @@ DATABASES = {
 
 # Auth
 AUTH_USER_MODEL = "user.User"
+LOGIN_URL='/auth/login'
 LOGIN_REDIRECT_URL = "/"
 # LOGOUT_REDIRECT_URL = "/"
 
 # Mail
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "127.0.0.1"
+EMAIL_HOST = os.getenv("MAIL_HOST", "127.0.0.1")
 EMAIL_PORT = 1025
 
 # Password validation
@@ -183,6 +184,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Celery
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", 'amqp://rmuser:rmpassword@127.0.0.1:5672')
+CELERY_RESULT_BACKEND = ''
+CELERY_TIMEZONE = TIME_ZONE
 
 # Forms
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"

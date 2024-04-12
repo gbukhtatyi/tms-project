@@ -1,5 +1,8 @@
+# Django
 from django.db import models
 from django.contrib.auth import get_user_model
+# Application
+from .tasks import result_created
 
 
 class Test(models.Model):
@@ -51,6 +54,18 @@ class Result(models.Model):
                               verbose_name="Статус тестирования")
     score = models.IntegerField(default=0)
     score_total = models.IntegerField(default=0)
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, **kwargs):
+        is_creating = self.id is None
+        super().save(**kwargs)
+        if self.status == ResultStatus.FINISHED:
+            result_created.apply_async(args=[self.id])
+
+    class Meta:
+        ordering = ['-created_at']
 
 
 class ResultAnswer(models.Model):

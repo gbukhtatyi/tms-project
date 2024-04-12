@@ -1,7 +1,7 @@
 <div class="card mb-4">
     <div class="card-body">
         <p class="card-title">
-            <strong>{{ comment.user.username }}</strong> <span class="text-muted">{{ comment.created_at|date:"jS F Y" }}</span>
+            <strong>{{ comment.user.username }}</strong> <span class="text-muted">{{ comment.created_at|date:"Y-d-m H:i" }}</span>
         </p>
         {{ comment.content }}
     </div>

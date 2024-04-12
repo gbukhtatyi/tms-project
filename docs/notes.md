@@ -26,7 +26,20 @@ docker-compose up
 
 ```
 
-## 
+## Celery
+
+```bash
+
+
+# Run Celery Worker
+celery -A app worker -l DEBUG -c 1 -Q celery -n main
+
+# Run Celery Beat
+celery -A app beat -l DEBUG
+ 
+```
+
+## Data
 
 ```bash
 

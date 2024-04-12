@@ -11,6 +11,19 @@ from django.db.models import Q
 from .models import Test, Question, Answer, Result, ResultStatus, ResultAnswer
 
 
+def examination_viewing(request, pk):
+    test = get_object_or_404(Test, id=pk)
+
+    return render(
+        request,
+        "examination/viewing/index.html",
+        {
+            "test": test
+        }
+    )
+
+
+@login_required
 def examination_start(request, pk):
     test = get_object_or_404(Test, id=pk)
     currentResult = Result.objects.filter(user=request.user).filter(status=ResultStatus.NEW).first()
@@ -24,6 +37,7 @@ def examination_start(request, pk):
     return redirect('/examination/test/current')
 
 
+@login_required
 def examination_current(request):
     result = get_object_or_404(Result, user=request.user, status=ResultStatus.NEW)
 
@@ -35,7 +49,7 @@ def examination_current(request):
         }
     )
 
-
+@login_required
 def examination_finish(request):
     result = get_object_or_404(Result, user=request.user, status=ResultStatus.NEW)
     test = result.test
@@ -87,7 +101,7 @@ class TestDetailView(DetailView):
 
     def get_queryset(self, **kwargs):
         qs = super().get_queryset(**kwargs)
-        if (self.request.user):
+        if (self.request.user.id is not None):
             qs = qs.filter(Q(is_published=True) | Q(user=self.request.user))
         else:
             qs = qs.filter(is_published=True)
@@ -98,6 +112,16 @@ class MyTestListView(ListView):
     queryset = Test.objects.all()
     paginate_by = 20
     template_name = "examination/grid.html"
+
+    def get_queryset(self, **kwargs):
+        qs = super().get_queryset(**kwargs)
+        return qs.filter(user_id=self.request.user.id)
+
+
+class MyResultListView(ListView):
+    queryset = Result.objects
+    paginate_by = 20
+    template_name = "examination/my/result.html"
 
     def get_queryset(self, **kwargs):
         qs = super().get_queryset(**kwargs)

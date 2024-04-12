@@ -25,12 +25,10 @@
 
     <div class="row">
         <div class="col-lg-12 mb-3 text-center">
+            <a href="{% url 'examination_viewing' pk=test.id %}" class="btn btn-dark">Просмотреть вопросы</a>
             <a href="{% url 'examination_start' pk=test.id %}" class="btn btn-dark">Пройти тест</a>
         </div>
     </div>
 
-    <hr/>
-
-    {% include 'comment/section.html' with model=test %}
 
 {% endblock page_content %}
